@@ -1,27 +1,31 @@
+const imageStack: string[] = []
+const MAX_STACK_SIZE = 10
+
 chrome.runtime.onMessage.addListener(
-    (message, _sender, sendResponse) => {
-        if (message.type !== 'CAPTURE_VISIBLE_TAB') return
+    (message, _sender, _sendResponse) => {
+        switch (message.type) {
+            case 'IMAGE_HOVERED': {
+                const src = message.src as string
 
-        chrome.windows.getCurrent((window) => {
-            if (!window?.id) {
-                sendResponse({ error: 'No active window' })
-                return
-            }
+                if (!imageStack.includes(src)) {
+                    imageStack.unshift(src)
 
-            chrome.tabs.captureVisibleTab(
-                window.id,
-                { format: 'png' },
-                (dataUrl) => {
-                    if (chrome.runtime.lastError) {
-                        sendResponse({ error: chrome.runtime.lastError.message })
-                        return
+                    if (imageStack.length > MAX_STACK_SIZE) {
+                        imageStack.pop()
                     }
 
-                    sendResponse({ screenshot: dataUrl })
+                    console.log('Image queued:', src)
+                    console.log('Stack size:', imageStack.length)
                 }
-            )
-        })
+                break
+            }
 
-        return true
+            case 'GET_QUEUE_COUNT': {
+                _sendResponse({ count: imageStack.length })
+                break
+            }
+
+            // future message types go here
+        }
     }
 )

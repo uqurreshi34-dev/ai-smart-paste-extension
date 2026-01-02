@@ -6,18 +6,17 @@ export default defineConfig({
   base: './',
   plugins: [react()],
   build: {
-    outDir: 'dist',
-    emptyOutDir: true,
     rollupOptions: {
       input: {
         popup: resolve(__dirname, 'index.html'),
-        background: resolve(__dirname, 'src/background.ts')
+        background: resolve(__dirname, 'src/background.ts'),
+        content: resolve(__dirname, 'src/content.ts')
       },
       output: {
         entryFileNames: (chunk) => {
-          return chunk.name === 'background'
-            ? 'background.js'
-            : 'assets/[name]-[hash].js'
+          if (chunk.name === 'background') return 'background.js'
+          if (chunk.name === 'content') return 'content.js'
+          return 'assets/[name]-[hash].js'
         }
       }
     },
