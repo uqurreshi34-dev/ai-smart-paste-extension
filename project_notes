@@ -1,9 +1,0 @@
-manifest.json:
-Key point to understand
-Chrome will later load only the built files (dist/) (see vite.config.ts)
-not the source code
----------------------
-
-build:
-Build only:
-generates output files (dist/)
