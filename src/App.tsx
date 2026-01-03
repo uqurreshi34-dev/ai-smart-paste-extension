@@ -55,12 +55,6 @@ function App() {
             <img
               key={src}
               src={src}
-              style={{
-                width: '100%',
-                height: '60px',
-                objectFit: 'cover',
-                borderRadius: '4px'
-              }}
             />
           ))}
         </div>
