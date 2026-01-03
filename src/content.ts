@@ -1,21 +1,56 @@
-console.log('AI Smart Paste: content script LOADED')
 
-let lastImageSrc: string | null = null
+console.log('CONTENT SCRIPT LOADED');
 
-document.addEventListener('mouseover', (e: MouseEvent) => {
-    console.log('AI Smart Paste: mouseover fired')
-    const target = e.target as HTMLElement
+const seen = new Set<string>();
 
-    if (target && target.tagName === 'IMG') {
-        const img = target as HTMLImageElement
+document.addEventListener(
+    'pointerenter',
+    (e) => {
+        const target = e.target;
 
-        if (img.src && img.src != lastImageSrc) {
-            lastImageSrc = img.src
+        if (!(target instanceof Element)) return;
+
+        // Find the nearest image *or picture*
+        const img = target.closest('img, picture') as HTMLElement | null;
+        if (!img) return;
+
+        // Delay extraction to allow lazy-loading / srcset resolution
+        requestAnimationFrame(() => {
+            // let actualImg: HTMLImageElement | null = null;
+
+            // if (img instanceof HTMLImageElement) {
+            //     actualImg = img;
+            // } else {
+            //     actualImg = img.querySelector('img');
+            // }
+            let actualImg: HTMLImageElement | null = null;
+
+            if (img instanceof HTMLImageElement) {
+                actualImg = img;
+            } else {
+                // 🔍 Look deeper for thumbnails inside links / video cards
+                actualImg =
+                    img.querySelector('img') ||
+                    img.closest('a')?.querySelector('img') ||
+                    img.closest('[role="link"]')?.querySelector('img') ||
+                    null;
+            }
+
+            if (!actualImg) return;
+
+            const src = actualImg.currentSrc || actualImg.src;
+            if (!src) return;
+
+            if (seen.has(src)) return;
+            seen.add(src);
 
             chrome.runtime.sendMessage({
                 type: 'IMAGE_HOVERED',
-                src: img.src
-            })
-        }
-    }
-})
+                src
+            });
+
+            console.log('Queued image:', src);
+        });
+    },
+    true
+);

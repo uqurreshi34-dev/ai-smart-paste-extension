@@ -10,7 +10,10 @@
         "service_worker": "background.js",
         "type": "module"
     },
-    "permissions": [],
+    "permissions": [
+        "storage",
+        "clipboardWrite"
+    ],
     "content_scripts": [
         {
             "matches": [
