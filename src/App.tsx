@@ -49,27 +49,22 @@ function App() {
         </p>
       )}
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '6px',
-          marginTop: '8px'
-        }}
-      >
-        {items.map((src) => (
-          <img
-            key={src}
-            src={src}
-            style={{
-              width: '100%',
-              height: '60px',
-              objectFit: 'cover',
-              borderRadius: '4px'
-            }}
-          />
-        ))}
-      </div>
+      {items.length > 0 && (
+        <div className="grid">
+          {items.map((src) => (
+            <img
+              key={src}
+              src={src}
+              style={{
+                width: '100%',
+                height: '60px',
+                objectFit: 'cover',
+                borderRadius: '4px'
+              }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
