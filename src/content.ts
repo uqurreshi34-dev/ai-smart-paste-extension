@@ -1,6 +1,28 @@
 
 console.log('CONTENT SCRIPT LOADED');
 
+const SUPPORTED_AI_SITES = [
+    'chat.openai.com',
+    'chatgpt.com',
+    'claude.ai'
+]
+
+function isSupportedAISite(): boolean {
+    const hostname = window.location.hostname
+    return SUPPORTED_AI_SITES.some(site =>
+        hostname === site || hostname.endsWith(`.${site}`)
+    )
+}
+
+console.log('AI Smart Paste: hostname =', window.location.hostname)
+
+
+if (isSupportedAISite()) {
+    console.log('AI Smart Paste: Supported AI site detected')
+} else {
+    console.log('AI Smart Paste: Not an AI site')
+}
+
 const seen = new Set<string>();
 
 document.addEventListener(
