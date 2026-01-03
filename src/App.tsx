@@ -57,9 +57,9 @@ function App() {
           marginTop: '8px'
         }}
       >
-        {items.map((src, i) => (
+        {items.map((src) => (
           <img
-            key={i}
+            key={src}
             src={src}
             style={{
               width: '100%',
