@@ -25,12 +25,13 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
                 const src = message.src as string;
                 let stack = await getStack();
 
+                if (stack.length >= MAX_STACK_SIZE) {
+                    console.log('Image queue full — ignoring hover');
+                    return;
+                }
+
                 if (!stack.includes(src)) {
                     stack.unshift(src);
-                    if (stack.length > MAX_STACK_SIZE) {
-                        stack.pop();
-                    }
-
                     await saveStack(stack);
                     console.log('Image queued:', src);
                 }
