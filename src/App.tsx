@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./App.css";
+
 
 function App() {
   const [count, setCount] = useState<number>(0)
@@ -7,9 +7,6 @@ function App() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    chrome.runtime.sendMessage({ type: 'PING' }, (response) => {
-      console.log('Popup PING response:', response)
-    })
 
     chrome.runtime.sendMessage({ type: 'GET_QUEUE_COUNT' }, (response) => {
       if (chrome.runtime.lastError) {
